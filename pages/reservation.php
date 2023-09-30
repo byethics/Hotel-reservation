@@ -1,50 +1,32 @@
 <?php
-include('../partials/header.php');
-
-include('../partials/reservation.php');
+require_once('../partials/header.php');
+require_once('../partials/reservation.php');
 
 if (!$_SESSION['loged-in']) {
   header("Location: /Hotel-reservation/pages/login.php");
 }
 
-$host = 'localhost';
-$db_name = 'reservation';
-$username = 'root';
-$password = '';
-$conn = mysqli_connect($host, $username, $password, $db_name);
-
-if (!$conn) {
-  die("Connection failed: " . mysqli_connect_error());
-} else {
-
-  if (isset($_GET['room'])) {
-    $room = $_GET['room'];
-    $email =  $_SESSION['email'];
-    $email =  $_SESSION['email'];
-
-    $sql = "SELECT * FROM rooms WHERE rid = '$room';";
-    $data = mysqli_fetch_array(mysqli_query($conn, $sql));
-
-    if (count($data) > 1) {
-      $_SESSION['room'] = $data['rid'];
-      $_SESSION['room-category'] = $data['category'];
+if (isset($_GET['room'])) {
+  $room = $_GET['room'];
+  $email =  $_SESSION['email'];
+  $email =  $_SESSION['email'];
+  try {
+    $query = 'SELECT * FROM rooms WHERE rid=?';
+    $result = $mysqli->execute_query($query, [$room]);
+    foreach ($result as $row) {
+      $_SESSION['room'] = $row['rid'];
+      $_SESSION['room-category'] = $row['category'];
       $uid = $_SESSION['uid'];
-      $rid = $data['rid'];
-      $sqlr = "INSERT INTO `reservation` (`room`, `ui`) VALUES ('$rid', '$uid');";
-      $sqlru = "UPDATE `rooms` SET `status` = 'booked' WHERE `rooms`.`rid` = $rid;";
-      try {
-        if (mysqli_query($conn, $sqlr)) {
-          if (mysqli_query($conn, $sqlru)) {
+      $rid = $row['rid'];
+      $reservation_query = 'INSERT INTO `reservation` (`room`, `ui`) VALUES (?, ?)';
+      $rooms_update_query = 'UPDATE `rooms` SET `status`=? WHERE `rooms`.`rid`=?';
+      $mysqli->execute_query($reservation_query, [$rid, $uid]);
+      $mysqli->execute_query($rooms_update_query, ['booked', $rid]);
 
-            header("Location: /Hotel-reservation");
-          }
-        }
-      } catch (\Throwable $th) {
-        print_r($th);
-      }
+      header("Location: /Hotel-reservation");
     }
-    mysqli_close($conn);
+  } catch (\Throwable $th) {
+    print_r($th);
   }
 }
-
 include('../partials/footer.php');

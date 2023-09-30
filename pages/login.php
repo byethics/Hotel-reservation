@@ -1,21 +1,12 @@
 <?php
-include('../partials/header.php');
-include('../partials/auth/login.php');
+require_once('../partials/header.php');
+require_once('../partials/auth/login.php');
 
 if (isset($_SESSION['loged-in'])) {
   if ($_SESSION['loged-in']) {
     header("Location: /Hotel-reservation");
   }
 }
-
-$host = 'localhost';
-$db_name = 'reservation';
-$username = 'root';
-$password = '';
-
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-$mysqli = new mysqli($host, $username, $password, $db_name);
-
 
 if (isset($_POST['submit'])) {
   $email = htmlspecialchars(trim($_POST['email']));
