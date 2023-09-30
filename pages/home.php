@@ -9,7 +9,7 @@ $username = 'root';
 $password = '';
 $conn = mysqli_connect($host, $username, $password, $db_name);
 if (isset($_GET['giveout'])) {
-  $giveout = $_GET['giveout'];
+  $giveout = htmlspecialchars($_GET['giveout']);
   $sqld = "DELETE FROM `reservation` WHERE room = $giveout;";
   $sqldu = "UPDATE `rooms` SET `status` = 'available' WHERE `rooms`.`rid` = $giveout;";
   if (mysqli_query($conn, $sqld)) {

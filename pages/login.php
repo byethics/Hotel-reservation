@@ -18,8 +18,8 @@ $mysqli = new mysqli($host, $username, $password, $db_name);
 
 
 if (isset($_POST['submit'])) {
-  $email = trim($_POST['email']);
-  $password = trim($_POST['password']);
+  $email = htmlspecialchars(trim($_POST['email']));
+  $password = htmlspecialchars(trim($_POST['password']));
 
   $query = 'SELECT * FROM users WHERE email=? and password=?';
   $result = $mysqli->execute_query($query, [$email, $password]);
