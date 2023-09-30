@@ -1,6 +1,6 @@
 <?php
 
-include('../partials/header.php');
+require_once('../partials/header.php');
 if (!$_SESSION['loged-in']) {
 }
 if (!isset($_SESSION['role'])) {
@@ -9,16 +9,8 @@ if (!isset($_SESSION['role'])) {
 if ($_SESSION['role'] !== "admin") {
    header("Location: /Hotel-reservation");
 }
-include('../partials/footer.php');
 $user_query = 'SELECT * FROM `users`';
 $rooms_query = 'SELECT * FROM `rooms`';
-$host = 'localhost';
-$db_name = 'reservation';
-$username = 'root';
-$password = '';
-
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-$mysqli = new mysqli($host, $username, $password, $db_name);
 
 if (isset($_GET['deleteuid'])) {
    $did = htmlspecialchars($_GET['deleteuid']);

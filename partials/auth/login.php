@@ -1,5 +1,4 @@
 <form action="/Hotel-reservation/pages/login.php" method="post">
-
   <div class="form-group">
     <h1 class="form-label my-4 text-center">Login to access your account!</h1>
     <div class="form-floating mb-3">

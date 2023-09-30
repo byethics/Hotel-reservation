@@ -1,28 +1,29 @@
 <?php
-
 if (!$_SESSION['loged-in']) {
   header("Location: /Hotel-reservation/pages/login.php");
 }
-$host = 'localhost';
-$db_name = 'reservation';
-$username = 'root';
-$password = '';
-$conn = mysqli_connect($host, $username, $password, $db_name);
+
 if (isset($_GET['giveout'])) {
   $giveout = htmlspecialchars($_GET['giveout']);
-  $sqld = "DELETE FROM `reservation` WHERE room = $giveout;";
-  $sqldu = "UPDATE `rooms` SET `status` = 'available' WHERE `rooms`.`rid` = $giveout;";
-  if (mysqli_query($conn, $sqld)) {
-    if (mysqli_query($conn, $sqldu)) {
-      unset($_SESSION['room']);
-      header("Location: /Hotel-reservation");
-    }
-  }
+
+  $reservation_delete_query = 'DELETE FROM `reservation` WHERE room=?';
+  $rooms_update_query = 'UPDATE `rooms` SET `status`=? WHERE `rooms`.`rid`=?';
+  $mysqli->execute_query($reservation_delete_query, [$giveout]);
+  $mysqli->execute_query($rooms_update_query, ['available', $giveout]);
+  unset($_SESSION['room']);
+  header("Location: /Hotel-reservation");
 }
+$rooms = $mysqli->execute_query("SELECT * FROM rooms WHERE status = 'available'");
 ?>
 <div class="container mt-4">
   <div class="alert alert-dismissible alert-danger">
-    <strong><?php echo mysqli_num_rows(mysqli_query($conn, "SELECT * FROM rooms WHERE status = 'available'")); ?> rooms available</strong> <a href="#" class="alert-link mr-4">request one</a> for you.
+    <strong><?php
+            $i = 1;
+            foreach ($rooms as $room) {
+              ++$i;
+            }
+            echo $i;
+            ?> rooms available</strong> <a href="#" class="alert-link mr-4">request one</a> for you.
   </div>
 </div>
 <?php

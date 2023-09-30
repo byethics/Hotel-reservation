@@ -56,4 +56,11 @@ session_start();
 
   <div class="container">
     <?php
+    $host = 'localhost';
+    $db_name = 'reservation';
+    $username = 'root';
+    $password = '';
+
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+    $mysqli = new mysqli($host, $username, $password, $db_name);
     ?>
