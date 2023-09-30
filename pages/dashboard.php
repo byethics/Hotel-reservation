@@ -20,10 +20,8 @@ $password = '';
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 $mysqli = new mysqli($host, $username, $password, $db_name);
 
-
 if (isset($_GET['deleteuid'])) {
-   $did = $_GET['deleteuid'];
-   echo $did;
+   $did = htmlspecialchars($_GET['deleteuid']);
    try {
       $query = 'DELETE FROM users WHERE `users`.`uid` = ?';
       $result = $mysqli->execute_query($query, [$did]);
@@ -34,7 +32,7 @@ if (isset($_GET['deleteuid'])) {
 }
 
 if (isset($_GET['deleterid'])) {
-   $did = $_GET['deleterid'];
+   $did = htmlspecialchars($_GET['deleterid']);
    try {
       $query = 'DELETE FROM rooms WHERE `rooms`.`rid` = ?';
       $result = $mysqli->execute_query($query, [$did]);
@@ -45,11 +43,10 @@ if (isset($_GET['deleterid'])) {
 }
 
 if (isset($_POST['submit'])) {
-   $cat = $_POST['cat'];
-   $price = $_POST['price'];
-   $mates = $_POST['mates'];
+   $cat = htmlspecialchars($_POST['cat']);
+   $price = htmlspecialchars($_POST['price']);
+   $mates = htmlspecialchars($_POST['mates']);
    try {
-
       $query = 'INSERT INTO `rooms` (`price`, `category`, `mates`) VALUES (?, ?, ?)';
       $result = $mysqli->execute_query($query, [$price, $cat, $mates]);
       header("Location: /Hotel-reservation/pages/dashboard.php");
